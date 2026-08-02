@@ -1,0 +1,62 @@
+{
+  "configuration": {
+    "device_name": {
+      "name": "Eszköz neve",
+      "description": "Az időjárás-állomás megjelenítési neve a Home Assistant felületén (pl. 'Kerti Időjárás-állomás')."
+    },
+    "manufacturer": {
+      "name": "Gyártó",
+      "description": "A berendezés gyártója (pl. 'Raddy', 'Ecowitt', 'Bresser', 'Generic')."
+    },
+    "device_model": {
+      "name": "Eszköz típusa / Modell",
+      "description": "A pontos modellszám vagy típus (pl. 'WF-100SE', 'GW1000')."
+    },
+    "device_identifier": {
+      "name": "Egyedi azonosító",
+      "description": "A Home Assistant belső azonosítója (slug). Ékezetmentes, kisbetűs és szóköz nélküli legyen (pl. 'my_weather_station')."
+    },
+    "station_id": {
+      "name": "Állomás ID (Opcionális)",
+      "description": "Ha az állomás küld 'ID' paramétert, és csak a saját adataidat akarod elfogadni, itt megadhatod (egyébként hagyd üresen)."
+    },
+    "station_password": {
+      "name": "Állomás jelszó (Opcionális)",
+      "description": "Ha az állomás küld 'password' paramétert és csak a saját adataidat akarod elfogadni, itt megadhatod (egyébként hagyd üresen)."
+    },
+    "log_raw_data": {
+      "name": "Nyers adatok naplózása",
+      "description": "Kapcsold be, ha a naplóban (Log) látni szeretnéd az állomástól érkező összes nyers HTTP paramétert, valamint, hogy mik azok, amik még nincsennek beállítva (pl. extra szenzorok felderítéséhez)."
+    },
+    "sensors": {
+      "name": "Szenzorok beállítása",
+      "description": "Itt adhatod meg az egyes mért értékek leképezését, mértékegységeit és osztályait.",
+      "fields": {
+        "id": {
+          "name": "Szenzor azonosító (ID)",
+          "description": "Egyedi belső azonosító a Home Assistantban (pl. 'outdoor_temp')."
+        },
+        "name": {
+          "name": "Megjelenített név",
+          "description": "A szenzor neve az entitáslistában és a felületen (pl. 'Külső Hőmérséklet')."
+        },
+        "incoming_key": {
+          "name": "Bejövő kulcs az állomástól",
+          "description": "A Wunderground HTTP kérésben érkező paraméter neve (pl. 'tempf', 'humidity', 'baromin')."
+        },
+        "unit": {
+          "name": "Mértékegység",
+          "description": "A bejövő adat eredeti mértékegysége (pl. '°F', '%', 'mph', 'inHg', 'in'). A Home Assistant automatikusan átváltja ezt a felhasználó által preferált egységre."
+        },
+        "class": {
+          "name": "Eszközosztály (Device Class)",
+          "description": "Meghatározza a szenzor típusát és az ikonját (pl. temperature, humidity, pressure)."
+        },
+        "state_class": {
+          "name": "Állapotosztály (State Class)",
+          "description": "A Home Assistant statisztikákhoz kell pl. 'measurement' a pillanatnyi értékeknek, 'total_increasing' a csapadék statiszitkának."
+        }
+      }
+    }
+  }
+}

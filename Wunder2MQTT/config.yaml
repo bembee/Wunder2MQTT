@@ -1,0 +1,110 @@
+name: "Wunder2MQTT"
+version: "1.0.0"
+slug: "wunder2mqtt"
+description: "Local Wunderground to MQTT bridge for weather stations."
+arch:
+  - aarch64
+  - amd64
+  - armv7
+init: false
+startup: application
+apparmor: true
+
+services:
+  - 'mqtt:need'
+
+ports:
+  80/tcp: 80
+ports_description:
+  80/tcp: "HTTP port called by the weather station. Specify a free port (e.g., 80, 8080)!"
+
+options:
+  device_name: "My Weather Station"
+  manufacturer: "WU"
+  device_model: "Weather Station"
+  device_identifier: "my_weather_station"
+  station_id: ""
+  station_password: ""
+  log_raw_data: false
+  sensors:
+    - id: "indoor_hum"
+      name: "Indoor Humidity"
+      incoming_key: "indoorhumidity"
+      unit: "%"
+      class: "humidity"
+      state_class: "measurement"
+    - id: "indoor_temp"
+      name: "Indoor Temperature"
+      incoming_key: "indoortempf"
+      unit: "°F"
+      class: "temperature"
+      state_class: "measurement"
+    - id: "outdoor_temp"
+      name: "Outdoor Temperature"
+      incoming_key: "tempf"
+      unit: "°F"
+      class: "temperature"
+      state_class: "measurement"
+    - id: "outdoor_hum"
+      name: "Humidity"
+      incoming_key: "humidity"
+      unit: "%"
+      class: "humidity"
+      state_class: "measurement"
+    - id: "barometer"
+      name: "Barometric Pressure"
+      incoming_key: "baromin"
+      unit: "inHg"
+      class: "pressure"
+      state_class: "measurement"
+    - id: "daily_rain"
+      name: "Daily Rain"
+      incoming_key: "dailyrainin"
+      unit: "in"
+      class: "precipitation"
+      state_class: "total_increasing"
+    - id: "hourly_rain"
+      name: "Hourly Rain"
+      incoming_key: "rainin"
+      unit: "in"
+      class: "precipitation"
+      state_class: "measurement"
+    - id: "wind_dir"
+      name: "Current Wind Direction"
+      incoming_key: "winddir"
+      unit: "°"
+      class: "wind_direction"
+      state_class: "measurement"
+    - id: "wind_gust_speed"
+      name: "Current Gust Speed"
+      incoming_key: "windgustmph"
+      unit: "mph"
+      class: "wind_speed"
+      state_class: "measurement"
+    - id: "wind_speed"
+      name: "Current Wind Speed"
+      incoming_key: "windspeedmph"
+      unit: "mph"
+      class: "wind_speed"
+      state_class: "measurement"
+    - id: "last_update"
+      name: "Last Updated"
+      incoming_key: "dateutc"
+      class: "timestamp"
+      state_class: "none"
+
+schema:
+  device_name: str
+  manufacturer: str
+  device_model: str
+  device_identifier: str
+  station_id: str?
+  station_password: str?
+  log_raw_data: bool
+  sensors:
+    - incoming_key: str
+      name: str
+      id: str
+      unit: str?
+      class: list(none|temperature|humidity|pressure|wind_speed|precipitation|wind_direction|timestamp|illuminance|battery|voltage)
+      state_class: list(none|measurement|total|total_increasing)

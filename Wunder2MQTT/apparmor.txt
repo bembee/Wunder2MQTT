@@ -1,0 +1,49 @@
+#include <tunables/global>
+
+profile wunder2mqtt flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  # Allow network communication
+  network inet stream,
+  network inet dgram,
+  network inet6 stream,
+  network inet6 dgram,
+
+  # Allow local file system access inside container
+  /data/options.json r,
+  /proc/** r,
+  /sys/** r,
+  /dev/null rw,
+  /dev/urandom r,
+  /dev/random r,
+
+  # Network & DNS name resolution rules
+  /etc/resolv.conf r,
+  /etc/hosts r,
+  /etc/nsswitch.conf r,
+  /etc/gai.conf r,
+  /etc/protocols r,
+  /etc/services r,
+  
+  # Allow execution and reading of application scripts
+  /app/** r,
+  /app/*.py r,
+  /**.py r,
+  
+  # Allow loading system libraries (needed for Python dynamic libs like libpython3.11.so)
+  /lib/** mr,
+  /lib64/** mr,
+  /usr/lib/** mr,
+  /usr/lib64/** mr,
+  /usr/local/lib/** mr,
+  /etc/ld.so.cache r,
+
+  # Allow execution of system binaries and Python
+  /usr/bin/** ix,
+  /usr/local/bin/** ix,
+  /bin/** ix,
+
+  # Capabilities required by Python and socket binding on port 80
+  capability net_bind_service,
+}

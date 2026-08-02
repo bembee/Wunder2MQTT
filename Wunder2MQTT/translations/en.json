@@ -1,0 +1,62 @@
+{
+  "configuration": {
+    "device_name": {
+      "name": "Device Name",
+      "description": "Display name of the weather station in Home Assistant (e.g., 'Garden Weather Station')."
+    },
+    "manufacturer": {
+      "name": "Manufacturer",
+      "description": "Hardware manufacturer (e.g., 'Raddy', 'Ecowitt', 'Bresser', 'Generic')."
+    },
+    "device_model": {
+      "name": "Device Model / Type",
+      "description": "Exact model or hardware version (e.g., 'WF-100SE', 'GW1000')."
+    },
+    "device_identifier": {
+      "name": "Device Identifier",
+      "description": "Unique internal slug for Home Assistant. Use lowercase letters and underscores only (e.g., 'my_weather_station')."
+    },
+    "station_id": {
+      "name": "Station ID (Optional)",
+      "description": "If your station sends an 'ID' parameter and you want to restrict incoming data, enter it here (otherwise leave blank)."
+    },
+    "station_password": {
+      "name": "Station Password (Optional)",
+      "description": "If your station sends an 'password' parameter and you want to restrict incoming data, enter it here (otherwise leave blank)."
+    },
+    "log_raw_data": {
+      "name": "Log Raw Data",
+      "description": "Enable to log all raw incoming HTTP request parameters (useful for finding extra/unsupported sensor keys)."
+    },
+    "sensors": {
+      "name": "Sensors Configuration",
+      "description": "Configure entity mappings, measurement units, and device/state classes.",
+      "fields": {
+        "id": {
+          "name": "Sensor ID",
+          "description": "Unique entity ID prefix in Home Assistant (e.g., 'outdoor_temp')."
+        },
+        "name": {
+          "name": "Display Name",
+          "description": "Friendly name of the sensor shown in UI (e.g., 'Outdoor Temperature')."
+        },
+        "incoming_key": {
+          "name": "Incoming Key",
+          "description": "URL parameter key received in the Wunderground request (e.g., 'tempf', 'humidity', 'baromin')."
+        },
+        "unit": {
+          "name": "Unit of Measurement",
+          "description": "Native unit of the incoming payload (e.g., '°F', '%', 'mph', 'inHg', 'in'). Home Assistant will automatically convert this to your preferred system units."
+        },
+        "class": {
+          "name": "Device Class",
+          "description": "Determines the sensor behavior and default icon in HA (e.g., temperature, humidity, pressure)."
+        },
+        "state_class": {
+          "name": "State Class",
+          "description": "Required for HA statistics e.g., 'measurement' for instantaneous values, 'total_increasing' for accumulated rain."
+        }
+      }
+    }
+  }
+}
