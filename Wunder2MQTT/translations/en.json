@@ -28,6 +28,10 @@
       "name": "Log Raw Data",
       "description": "Enable to log all raw incoming HTTP request parameters (useful for finding extra/unsupported sensor keys)."
     },
+    "wunderground_forwarding": {
+      "name": "Forward to Weather Underground",
+      "description": "Upload each accepted observation using the incoming ID and PASSWORD (registered station ID and station key). Optional cloud sharing; MQTT continues locally."
+    },
     "sensors": {
       "name": "Sensors Configuration",
       "description": "Configure entity mappings, measurement units, and device/state classes.",

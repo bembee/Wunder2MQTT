@@ -28,6 +28,10 @@
       "name": "Nyers adatok naplózása",
       "description": "Kapcsold be, ha a naplóban (Log) látni szeretnéd az állomástól érkező összes nyers HTTP paramétert, valamint, hogy mik azok, amik még nincsennek beállítva (pl. extra szenzorok felderítéséhez)."
     },
+    "wunderground_forwarding": {
+      "name": "Továbbítás a Weather Underground felé",
+      "description": "Minden elfogadott mérés feltöltése a beérkező ID és PASSWORD (regisztrált állomásazonosító és állomáskulcs) használatával. Opcionális felhőalapú megosztás; az MQTT helyben tovább működik."
+    },
     "sensors": {
       "name": "Szenzorok beállítása",
       "description": "Itt adhatod meg az egyes mért értékek leképezését, mértékegységeit és osztályait.",
