@@ -1,5 +1,5 @@
 name: "Wunder2MQTT"
-version: "1.0.0"
+version: "1.1.0"
 slug: "wunder2mqtt"
 description: "Local Wunderground to MQTT bridge for weather stations."
 arch:
@@ -26,6 +26,7 @@ options:
   station_id: ""
   station_password: ""
   log_raw_data: false
+  wunderground_forwarding: false
   sensors:
     - id: "indoor_hum"
       name: "Indoor Humidity"
@@ -101,6 +102,7 @@ schema:
   station_id: str?
   station_password: str?
   log_raw_data: bool
+  wunderground_forwarding: bool
   sensors:
     - incoming_key: str
       name: str

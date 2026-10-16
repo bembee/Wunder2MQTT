@@ -25,6 +25,8 @@ profile wunder2mqtt flags=(attach_disconnected,mediate_deleted) {
   /etc/gai.conf r,
   /etc/protocols r,
   /etc/services r,
+  /etc/ssl/** r,
+  /usr/share/ca-certificates/** r,
   
   # Allow execution and reading of application scripts
   /app/** r,

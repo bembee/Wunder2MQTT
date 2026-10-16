@@ -1,11 +1,14 @@
 # Wunder2MQTT [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J2T723F0R2)
 
 **Wunder2MQTT** is a Home Assistant app that acts as a local HTTP bridge, translating Weather Underground (Wunderground) HTTP requests from weather stations into Home Assistant MQTT.
-Free from the cloud! Keep your weather data 100% local.
+Keep your weather data local by default, with optional forwarding to Weather Underground.
+
+[GitHub repository](https://github.com/csaboka21/Wunder2MQTT)
 
 ## Features
 
 * **100% Local:** No internet connection or cloud reliance required. Data goes straight from your station to your Home Assistant.
+* **Optional Weather Underground Uploads:** Enable `wunderground_forwarding` to also upload each accepted observation using your station's incoming ID and station key. MQTT keeps working locally if cloud uploads fail.
 * **MQTT Auto-Discovery:** Devices and sensors appear automatically in Home Assistant. Zero YAML configuration needed!
 * **Pre-configured (but extensible):** The most common weather entities (Outdoor/Indoor Temp & Humidity, Wind, Rain, Barometer) are pre-configured by default. Does your station have extra sensors like soil moisture or solar radiation? You can easily add them via the app UI!
 * **Native Unit Conversion:** The app forwards native metrics directly. Home Assistant handles all unit conversions (e.g., °F to °C, mph to km/h) based on your user profile automatically.
@@ -17,7 +20,7 @@ Free from the cloud! Keep your weather data 100% local.
 
 Click the button below to automatically add this repository to your Home Assistant:
 
-[![Open your Home Assistant instance and show the add app repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fbembee%2FWunder2MQTT)
+[![Open your Home Assistant instance and show the add app repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fcsaboka21%2FWunder2MQTT)
 
 1. Scroll down (or refresh), and look for **Wunder2MQTT** in the store.
 2. Install, configure and start the app!
@@ -27,7 +30,7 @@ Click the button below to automatically add this repository to your Home Assista
 1. Open Home Assistant and navigate to **Settings** -> **Apps**.
 2. Click the **Install app** button in the bottom right.
 3. Click the three dots (menu) in the top right corner and select **Repositories**.
-4. Paste the URL of this GitHub repository and click **Add**.
+4. Paste `https://github.com/csaboka21/Wunder2MQTT` and click **Add**.
 5. Close the dialog, scroll down (or refresh), and look for **Wunder2MQTT** in the store.
 6. Install, configure and start the app!
 
@@ -37,6 +40,12 @@ Click the button below to automatically add this repository to your Home Assista
 
 The app comes with **11 basic sensors pre-configured** (Temperature, Humidity, Wind, Rain, Pressure). If your station provides more data, you can easily add new sensors to the list.
 Enable **"Log Raw Data"** to see all incoming HTTP keys in the app logs, which makes it incredibly easy to find and map extra sensors!
+
+### Optional Weather Underground forwarding
+
+Register a Personal Weather Station with Weather Underground and configure your console to send that station's ID as `ID` and its station key as `PASSWORD` to this app. Enable **Forward to Weather Underground** (`wunderground_forwarding`) in the app configuration. This shares observations with Weather Underground; the default is disabled. The optional local `station_id` / `station_password` settings only validate incoming requests and do not replace upload credentials.
+
+Uploads use HTTPS RapidFire and preserve the original weather fields, independently of the configured Home Assistant sensors. RapidFire supports observations up to once every 2.5 seconds; configure your console accordingly. If you redirect station DNS, restrict that redirection to the station: this app must resolve `rtupdate.wunderground.com` to the real service. See the [upload protocol](https://support.weather.com/s/article/PWS-Upload-Protocol) and [forwarding details](Wunder2MQTT/DOCS.md#optional-weather-underground-forwarding).
 
 ## Weather Station Setup
 
