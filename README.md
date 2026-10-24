@@ -12,6 +12,8 @@ Free from the cloud! Keep your weather data 100% local.
 * **Smart Timestamps:** Incoming `dateutc` parameters are automatically formatted into standard ISO 8601 UTC timestamps, rendering perfectly in your local timezone.
 * **Optional WU Forwarding:** If you use DNS hijacking, the app can optionally act as a transparent proxy and forward your data to the official Weather Underground servers so you don't lose your cloud statistics. 
 
+![Basic entities from a weather station](basic_sensors.png)
+
 ## Installation
 
 ### Option A: One-Click Install
@@ -43,7 +45,6 @@ Enable **"Log Raw Data"** to see all incoming HTTP keys in the app logs, which m
 
 To route your weather station's data to this app, use one of the two methods below depending on your device's capabilities:
 
-![Basic entities from a weather station]
 ### Method 1: App Configuration
 
 If your station allows setting up a custom server:
@@ -57,12 +58,11 @@ If your station allows setting up a custom server:
 
 ### Method 2: DNS Hijacking (For Hardcoded Stations)
 
-Some weather stations (like the Raddy WF-100C) only ask for Wi-Fi credentials and hardcode the server to `weatherstation.wunderground.com`. To use these locally, you must intercept their traffic:
+Some weather stations (like the Raddy WF-100C) hardcoded the server to `weatherstation.wunderground.com` or `rtupdate.wunderground.com`. To use these locally, you must intercept their traffic:
 
 1. Provide a local Wi-Fi network for the station (e.g., using the *Hass.io Access Point* app with a USB Wi-Fi adapter).
-2. Use a DNS server (like the *Dnsmasq* app or your router's DNS settings) to redirect `weatherstation.wunderground.com` or `rtupdate.wunderground.com` to your Home Assistant's local IP address.
+2. Use a DNS server (like the *Dnsmasq* app or your router's DNS settings) to redirect `weatherstation.wunderground.com` and `rtupdate.wunderground.com` to your Home Assistant's local IP address.
 
-(basic_sensors.png)
 
 ## Troubleshooting
 
