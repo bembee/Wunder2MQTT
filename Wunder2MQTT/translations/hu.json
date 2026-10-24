@@ -28,6 +28,18 @@
       "name": "Nyers adatok naplózása",
       "description": "Kapcsold be, ha a naplóban (Log) látni szeretnéd az állomástól érkező összes nyers HTTP paramétert, valamint, hogy mik azok, amik még nincsennek beállítva (pl. extra szenzorok felderítéséhez)."
     },
+    "forward_to_wu": {
+      "name": "Továbbítás a hivatalos WU szerverre",
+      "description": "Bekapcsolhatod, ha szeretnéd továbbítani az adatokat a Weather Underground felhőbe."
+    },
+    "wu_station_id": {
+      "name": "WU Station ID",
+      "description": "A Weather Underground által generált Station ID (csak akkor kell, ha a továbbítás be van kapcsolva)."
+    },
+    "wu_station_key": {
+      "name": "WU Station Key / Password",
+      "description": "A Weather Underground által generált jelszó/kulcs (csak akkor kell, ha a továbbítás be van kapcsolva)."
+    },
     "sensors": {
       "name": "Szenzorok beállítása",
       "description": "Itt adhatod meg az egyes mért értékek leképezését, mértékegységeit és osztályait.",

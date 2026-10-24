@@ -1,5 +1,5 @@
 name: "Wunder2MQTT"
-version: "1.0.0"
+version: "1.1.0"
 slug: "wunder2mqtt"
 description: "Local Wunderground to MQTT bridge for weather stations."
 arch:
@@ -26,6 +26,9 @@ options:
   station_id: ""
   station_password: ""
   log_raw_data: false
+  forward_to_wu: false
+  wu_station_id: ""
+  wu_station_key: ""
   sensors:
     - id: "indoor_hum"
       name: "Indoor Humidity"
@@ -74,7 +77,7 @@ options:
       incoming_key: "winddir"
       unit: "°"
       class: "wind_direction"
-      state_class: "measurement"
+      state_class: "measurement_angle"
     - id: "wind_gust_speed"
       name: "Current Gust Speed"
       incoming_key: "windgustmph"
@@ -101,10 +104,13 @@ schema:
   station_id: str?
   station_password: str?
   log_raw_data: bool
+  forward_to_wu: bool
+  wu_station_id: str?
+  wu_station_key: str?
   sensors:
     - incoming_key: str
       name: str
       id: str
       unit: str?
       class: list(none|temperature|humidity|pressure|wind_speed|precipitation|wind_direction|timestamp|illuminance|battery|voltage)
-      state_class: list(none|measurement|total|total_increasing)
+      state_class: list(none|measurement|total|total_increasing|measurement_angle)

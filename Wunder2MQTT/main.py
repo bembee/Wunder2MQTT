@@ -5,6 +5,8 @@ import time
 from flask import Flask, request
 from waitress import serve
 import paho.mqtt.client as mqtt
+import urllib.parse
+import threading
 
 logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -59,6 +61,9 @@ DEVICE_MODEL = options.get("device_model", "Weather Station")
 DEVICE_IDENTIFIER = options.get("device_identifier", "wunderground_weather_station")
 STATION_ID = options.get("station_id", "")
 STATION_PASSWORD = options.get("station_password", "")
+FORWARD_TO_WU = options.get("forward_to_wu", False)
+WU_STATION_ID = options.get("wu_station_id", "")
+WU_STATION_KEY = options.get("wu_station_key", "")
 LOG_RAW_DATA = options.get("log_raw_data", False)
 SENSORS = options.get("sensors", [])
 
@@ -79,6 +84,33 @@ if mqtt_config:
     MQTT_PASSWORD = mqtt_config.get("password")
 else:
     MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASSWORD = "core-mosquitto", 1883, "", ""
+
+def forward_to_wunderground(payload):
+    try:
+        wu_payload = {k: v for k, v in payload.items() if k.lower() not in ["id", "password"]} 
+        wu_payload["ID"] = WU_STATION_ID
+        wu_payload["PASSWORD"] = WU_STATION_KEY
+        
+        query_string = urllib.parse.urlencode(wu_payload, quote_via=urllib.parse.quote)
+        url = f"https://rtupdate.wunderground.com/weatherstation/updateweatherstation.php?{query_string}"
+
+        if LOG_RAW_DATA:
+            log_payload = wu_payload.copy()
+            log_payload["PASSWORD"] = "***HIDDEN***"
+            logger.info(f"Forwarding to WU: {json.dumps(log_payload)}")
+
+        req = urllib.request.Request(url, headers={'User-Agent': 'Wunder2MQTT-Addon/1.1'})
+        with urllib.request.urlopen(req, timeout=10) as response:
+            res_text = response.read().decode()
+            if "success" not in res_text.lower():
+                logger.warning(f"WU forwarding responded with unexpected message: {res_text}")
+            else:
+                logger.debug("Successfully forwarded data to official WU servers.")
+                
+    except urllib.error.HTTPError as e:
+        logger.error(f"HTTP Error {e.code} forwarding data to WU: {e.reason} - Please check your ID/KEY pair!")
+    except Exception as e:
+        logger.error(f"Error forwarding data to WU: {e}")
 
 def publish_discovery():
     for s in SENSORS:
@@ -134,9 +166,8 @@ client.loop_start()
 def health_check():
     return "OK", 200
 
-@app.route("/", defaults={"path": ""}, methods=["GET"])
-@app.route("/<path:path>", methods=["GET"])
-def catch_all(path):
+@app.route("/weatherstation/updateweatherstation.php", methods=["GET"])
+def update_weather_station():
     try:
         data = request.args.to_dict()
         
@@ -177,7 +208,9 @@ def catch_all(path):
 
         if processed_data:
             client.publish(STATE_TOPIC, json.dumps(processed_data))
-            
+
+        if FORWARD_TO_WU and WU_STATION_ID and WU_STATION_KEY:
+            threading.Thread(target=forward_to_wunderground, args=(data,)).start()
         return "success", 200
 
     except Exception as e:

@@ -12,12 +12,12 @@ Before installing and using this app, make sure you have:
 
 ### Network & DNS Redirection Setup
 
-If your weather station console does **not** allow configuring a custom server IP/URL directly and hardcodes `weatherstation.wunderground.com` (or similar endpoints), you must redirect the station's DNS traffic to your Home Assistant instance.
+If your weather station console does **not** allow configuring a custom server IP/URL directly and hardcodes `weatherstation.wunderground.com` or `rtupdate.wunderground.com`, you must redirect the station's DNS traffic to your Home Assistant instance.
 
 ### Tested Setup Guide
 
 1. **Dedicated Access Point:** Connect a compatible inexpensive USB Wi-Fi adapter to your Home Assistant hardware and use the [Hass.io Access Point](https://github.com/ex-ml/hassio-access-point) app to create a dedicated wireless network for the weather station.
-2. **DNS Hijacking / Redirection:** Use the **Dnsmasq** app to override `weatherstation.wunderground.com` (and the `/weatherstation/updateweatherstation.php` endpoint) so that all traffic points directly to your Home Assistant IP address.
+2. **DNS Hijacking / Redirection:** Use the **Dnsmasq** app to override `weatherstation.wunderground.com` and `rtupdate.wunderground.com` so that all traffic points directly to your Home Assistant IP address.
 
 ---
 
@@ -26,7 +26,7 @@ If your weather station console does **not** allow configuring a custom server I
 1. **Local HTTP Server (Flask & Waitress):**
    * The app runs a Python-based **Flask** server served by **Waitress** on internal port `80`.
    * Weather stations send periodic HTTP `GET` requests containing real-time weather metrics formatted as URL parameters (e.g., `tempf`, `humidity`, `baromin`, `dateutc`).
-   * The server listens to all incoming paths, meaning it seamlessly captures requests sent to default Wunderground endpoints such as `/weatherstation/updateweatherstation.php` or the root `/`.
+   * For security reasons, the server strictly listens **only** to the official Wunderground endpoint: `/weatherstation/updateweatherstation.php`. Any other requests to the IP are ignored.
 
 2. **Data Parsing & Formatting:**
    * When data arrives, the engine verifies optional authentication credentials (`ID` and `PASSWORD`).
@@ -38,14 +38,18 @@ If your weather station console does **not** allow configuring a custom server I
    * Parsed data is published to a single MQTT state topic (`<device_identifier>/state`) in JSON format.
    * Home Assistant automatically updates all matching entities in real time without requiring manual configuration in Home Assistant itself.
 
+4. **Optional Cloud Forwarding:**
+   * If enabled, the app strips out the local credentials, injects your official WU ID and Key, and forwards the data asynchronously (on a separate thread) to the official `rtupdate.wunderground.com` Rapid-Fire servers.
+
 ---
 
 ## Configuration Options
 
 1. **Device Name / Manufacturer / Model:** Define how your weather station and its entities appear in the Home Assistant Device Registry.
-2. **Station ID & Password:** *(Optional)* If your weather station or console requires authentication, specify the exact credentials configured on your device.
-3. **Log Raw Data:** Enable this option to log incoming raw HTTP requests and unhandled sensor keys in the app logs (ideal for debugging or finding extra sensors like soil moisture or solar radiation).
-4. **Sensors Configuration:**
+2. **Station ID & Password:** *(Optional)* If your weather station or console requires authentication locally, specify the exact credentials configured on your device.
+3. **WU Forwarding (Cloud Proxy):** Enable `forward_to_wu` and provide your official `wu_station_id` and `wu_station_key` to keep sending data to the Weather Underground cloud while still intercepting it locally.
+4. **Log Raw Data:** Enable this option to log incoming raw HTTP requests (and outgoing WU forwarded data). Ideal for debugging or finding extra sensors like soil moisture or solar radiation.
+5. **Sensors Configuration:**
    * Custom mapping for individual sensors (id, name, incoming key, unit).
    * **Device Class & State Class:** Custom dropdown selection for Home Assistant entity mapping.
 
@@ -57,7 +61,7 @@ On your weather station's configuration app (e.g., *WS View Plus*, *Ecowitt*, or
 
 * **Server / Host / IP:** The local IP address of your Home Assistant instance (or point your router's / Dnsmasq DNS for `weatherstation.wunderground.com` to your Home Assistant IP).
 * **Port:** `80` (or the custom host port you mapped in the app settings).
-* **Path:** `/weatherstation/updateweatherstation.php` (or simply `/`).
-* **Station ID / Password:** Match the credentials if configured in the app options.
+* **Path:** `/weatherstation/updateweatherstation.php` (do not leave blank or use `/`).
+* **Station ID / Password:** Match the local credentials if configured in the app options.
 
-> **Note:** Weather stations like the **Raddy WF-100C** (and similar hardcoded consoles) only ask for Wi-Fi credentials during setup and do not allow entering a custom server IP or URL. For these models, using the **DNS Redirection / Hijack** method described above is mandatory so that the station's built-in calls to `weatherstation.wunderground.com` are transparently routed to Home Assistant. (Station ID and password remain optional in the app settings).
+> **Note:** Weather stations like the **Raddy WF-100C** (and similar hardcoded consoles) do not allow entering a custom server IP or URL. For these models, using the **DNS Redirection / Hijack** method described above is mandatory so that the station's built-in calls to `weatherstation.wunderground.com` or `rtupdate.wunderground.com` are transparently routed to Home Assistant. (Station ID and password remain optional in the app settings).
